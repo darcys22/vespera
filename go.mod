@@ -1,8 +1,11 @@
-module changeme
+module github.com/darcys22/vespera
 
 go 1.18
 
-require github.com/wailsapp/wails/v2 v2.4.0
+require (
+	github.com/0xcafed00d/joystick v1.0.1
+	github.com/wailsapp/wails/v2 v2.4.0
+)
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect

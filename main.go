@@ -2,18 +2,25 @@ package main
 
 import (
 	"embed"
+  "log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+
+	"github.com/darcys22/vespera/vespera"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
 
+func init() {
+      log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile | log.LUTC)
+}
+
 func main() {
 	// Create an instance of the app structure
-	app := NewApp()
+  state := vespera.NewState()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -24,13 +31,15 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		OnStartup:        state.Startup,
+    OnShutdown:       state.Shutdown,
 		Bind: []interface{}{
-			app,
+			state,
 		},
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+    log.Fatal("Error:", err.Error())
 	}
 }
+

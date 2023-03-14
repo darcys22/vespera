@@ -1,38 +1,28 @@
 import './style.css';
 import './app.css';
 
-import logo from './assets/images/logo-universal.png';
-import {Greet} from '../wailsjs/go/main/App';
+import {ToggleLight, ControllerStatus} from '../wailsjs/go/vespera/State';
 
 document.querySelector('#app').innerHTML = `
-    <img id="logo" class="logo">
-      <div class="result" id="result">Please enter your name below 👇</div>
-      <div class="input-box" id="input">
-        <input class="input" id="name" type="text" autocomplete="off" />
-        <button class="btn" onclick="greet()">Greet</button>
-      </div>
+    <div class="result" id="lightResult"></div>
+    <button class="btn" onclick="toggleLight()">Toggle Light</button>
+    <div class="result" id="xboxResult"></div>
+
     </div>
 `;
-document.getElementById('logo').src = logo;
 
-let nameElement = document.getElementById("name");
-nameElement.focus();
-let resultElement = document.getElementById("result");
+let lightResultElement = document.getElementById("lightResult");
+let xboxResultElement = document.getElementById("xboxResult");
 
-// Setup the greet function
-window.greet = function () {
-    // Get name
-    let name = nameElement.value;
+// Setup the toggleLight function
+window.toggleLight = function () {
 
-    // Check if the input is empty
-    if (name === "") return;
-
-    // Call App.Greet(name)
+    // Call State.ToggleLight()
     try {
-        Greet(name)
+        ToggleLight()
             .then((result) => {
                 // Update result with data back from App.Greet()
-                resultElement.innerText = result;
+                lightResultElement.innerText = result;
             })
             .catch((err) => {
                 console.error(err);
@@ -41,3 +31,23 @@ window.greet = function () {
         console.error(err);
     }
 };
+
+// Setup the toggleLight function
+window.heartbeat = function () {
+
+    // Call State.ControllerStatus()
+    try {
+        ControllerStatus()
+            .then((result) => {
+                // Update result with data back from App.Greet()
+                xboxResultElement.innerText = result;
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    } catch (err) {
+        console.error(err);
+    }
+  setTimeout(window.heartbeat, 300)
+};
+window.heartbeat();
